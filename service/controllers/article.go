@@ -130,7 +130,10 @@ func InsertArticle(ctx *gin.Context) {
 		log.Fatal(err)
 	} else {
 		ctx.JSON(200, gin.H{
-			"inserted_id": result.InsertedID,
+			"success": true,
+			"message": "success",
+			"_id":     result,
+			"data":    article,
 		})
 	}
 }
