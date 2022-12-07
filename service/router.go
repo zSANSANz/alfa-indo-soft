@@ -14,12 +14,12 @@ func ExtRouter(mode string) *gin.Engine {
 	// route handling basic
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
-			"message": "ahlan wa sahlan panjebar-soennah-api",
+			"message": "ahlan wa sahlan alfa-indo-soft",
 		})
 	})
 
 	router.GET("/article", api.GetAllArticles)
-	router.GET("/article_by_title_and_body/:id", api.GetArticleByTitleAndBody)
+	router.GET("/article_by_title_and_body/:title", api.GetArticleByTitleAndBody)
 	router.POST("/article", api.InsertArticle)
 	router.PUT("/article/:id", api.UpdateArticle)
 	router.DELETE("/article/:id", api.DeleteArticle)
