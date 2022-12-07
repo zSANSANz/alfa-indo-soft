@@ -18,6 +18,12 @@ func ExtRouter(mode string) *gin.Engine {
 		})
 	})
 
+	router.GET("/article", api.GetAllArticles)
+	router.GET("/article_by_slug/:id", api.GetArticleByName)
+	router.POST("/article", api.InsertArticle)
+	router.PUT("/article/:id", api.UpdateArticle)
+	router.DELETE("/article/:id", api.DeleteArticle)
+
 	// route handling for external
 	router.GET("/ping", api.Ping)
 	router.GET("/blog", api.GetAllBlogs)

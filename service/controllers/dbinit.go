@@ -11,6 +11,7 @@ import (
 )
 
 // initializes single database collection object for all the api requests
+var collectionArticles *mongo.Collection
 var collectionBlogs *mongo.Collection
 var collectionUsers *mongo.Collection
 var collectionPosts *mongo.Collection
@@ -26,6 +27,7 @@ func init() {
 
 	costI, _ = strconv.Atoi(cost)
 	jwtKey = []byte(jj)
+	collectionBlogs = db.ConnectClient().Database("chatnews_cron").Collection("articles")
 	collectionBlogs = db.ConnectClient().Database("chatnews_cron").Collection("blogs")
 	collectionUsers = db.ConnectClient().Database("chatnews_cron").Collection("users")
 	collectionPosts = db.ConnectClient().Database("chatnews_cron").Collection("posts")
