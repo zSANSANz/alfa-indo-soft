@@ -102,6 +102,49 @@ func GetArticleByTitleAndBody(ctx *gin.Context) {
 	}
 }
 
+func GetArticleByAuthor(ctx *gin.Context) {
+	author := ctx.Param("author")
+
+	filter := bson.A{
+		bson.M{
+			"$match": bson.M{
+				"author": bson.M{"$regex": author},
+			},
+		},
+	}
+
+	var results []models.Article
+	cur, err := collectionArticles.Aggregate(context.TODO(), filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for cur.Next(context.TODO()) {
+		var elem models.Article
+		err := cur.Decode(&elem)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, elem)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	cur.Close(context.TODO())
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		ctx.JSON(200, gin.H{
+			"success": true,
+			"message": "success",
+			"data":    results,
+		})
+	}
+}
+
 // GetArticles -> gets articles given id
 func GetArticles(ctx *gin.Context) {
 	id := ctx.Param("id")
