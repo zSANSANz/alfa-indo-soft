@@ -1,0 +1,58 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - master
+      - development
+      - staging
+
+jobs:
+  check-branch:
+    name: Branch checking
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.check_step.outputs.branch }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get current branch
+        id: check_step
+        run: |
+          raw=$(git branch -r --contains ${{ github.ref }})
+          branch=${raw##*/}
+          echo "::set-output name=branch::$branch"
+          echo "Branch is $branch."
+  deploy:
+    name: Deploy to the branch
+    runs-on: ubuntu-latest
+    needs: check-branch
+
+    steps:
+      - name: Deploy to the master
+        if: ${{ needs.check-branch.outputs.branch == 'master' }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH_MASTER }}
+            sudo sh git-tools.sh master
+            sudo sh build.sh
+      - name: Deploy to the development
+        if: ${{ needs.check-branch.outputs.branch == 'development' }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH_DEV }}
+            sudo sh git-tools.sh development
+            sudo sh build.sh
