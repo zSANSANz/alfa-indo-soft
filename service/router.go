@@ -19,7 +19,7 @@ func ExtRouter(mode string) *gin.Engine {
 	})
 
 	router.GET("/article", api.GetAllArticles)
-	router.POST("/article_by_title_and_body", api.GetArticleByTitleAndBody)
+	router.GET("/article_by_title_and_body", api.GetArticleByTitleAndBody)
 	router.GET("/article_by_author/:author", api.GetArticleByAuthor)
 	router.POST("/article", api.InsertArticle)
 	router.PUT("/article/:id", api.UpdateArticle)
