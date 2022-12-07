@@ -42,7 +42,9 @@ func GetAllArticles(ctx *gin.Context) {
 		log.Fatal(err)
 	} else {
 		ctx.JSON(200, gin.H{
-			"result": results,
+			"success": true,
+			"message": "success",
+			"data":    results,
 		})
 	}
 }
