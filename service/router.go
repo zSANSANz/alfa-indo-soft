@@ -2,7 +2,11 @@ package service
 
 import (
 	api "alfa-indo-soft/service/controllers"
+	"fmt"
+	"time"
 
+	"github.com/gin-contrib/cache"
+	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +22,16 @@ func ExtRouter(mode string) *gin.Engine {
 		})
 	})
 
+	router.GET("/ping", func(c *gin.Context) {
+		c.String(200, "pong "+fmt.Sprint(time.Now().Unix()))
+	})
+
+	store := persistence.NewInMemoryStore(time.Second)
+	// Cached Page
+	router.GET("/cache_ping", cache.CachePage(store, time.Minute, func(c *gin.Context) {
+		c.String(200, "pong "+fmt.Sprint(time.Now().Unix()))
+	}))
+
 	router.GET("/article", api.GetAllArticles)
 	router.GET("/article_by_title_and_body", api.GetArticleByTitleAndBody)
 	router.GET("/article_by_author/:author", api.GetArticleByAuthor)
@@ -26,7 +40,6 @@ func ExtRouter(mode string) *gin.Engine {
 	router.DELETE("/article/:id", api.DeleteArticle)
 
 	// route handling for external
-	router.GET("/ping", api.Ping)
 	router.GET("/blog", api.GetAllBlogs)
 	router.GET("/blog/:id", api.GetBlogs)
 
