@@ -13,5 +13,6 @@ func main() {
 	port := os.Getenv("PORT")
 	mode := os.Getenv("MODE")
 	router := service.ExtRouter(mode)
+
 	router.Run(":" + port)
 }

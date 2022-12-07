@@ -32,10 +32,10 @@ func ExtRouter(mode string) *gin.Engine {
 		c.String(200, "pong "+fmt.Sprint(time.Now().Unix()))
 	}))
 
-	router.GET("/article", api.GetAllArticles)
-	router.GET("/article_by_title_and_body", api.GetArticleByTitleAndBody)
-	router.GET("/article_by_author/:author", api.GetArticleByAuthor)
-	router.POST("/article", api.InsertArticle)
+	router.GET("/article", cache.CachePage(store, time.Minute, api.GetAllArticles))
+	router.GET("/article_by_title_and_body", cache.CachePage(store, time.Minute, api.GetArticleByTitleAndBody))
+	router.GET("/article_by_author/:author", cache.CachePage(store, time.Minute, api.GetArticleByAuthor))
+	router.POST("/article", cache.CachePage(store, time.Minute, api.InsertArticle))
 	router.PUT("/article/:id", api.UpdateArticle)
 	router.DELETE("/article/:id", api.DeleteArticle)
 
