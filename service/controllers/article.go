@@ -50,12 +50,22 @@ func GetAllArticles(ctx *gin.Context) {
 }
 
 func GetArticleByTitleAndBody(ctx *gin.Context) {
-	title := ctx.Param("title")
+	var json models.Article
+
+	ctx.Bind(&json)
+
+	title := json.Title
+	body := json.Body
 
 	filter := bson.A{
 		bson.M{
 			"$match": bson.M{
 				"title": bson.M{"$regex": title},
+			},
+		},
+		bson.M{
+			"$match": bson.M{
+				"body": bson.M{"$regex": body},
 			},
 		},
 	}
