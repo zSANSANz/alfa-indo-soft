@@ -27,7 +27,7 @@ func init() {
 
 	costI, _ = strconv.Atoi(cost)
 	jwtKey = []byte(jj)
-	collectionBlogs = db.ConnectClient().Database("chatnews_cron").Collection("articles")
+	collectionArticles = db.ConnectClient().Database("chatnews_cron").Collection("articles")
 	collectionBlogs = db.ConnectClient().Database("chatnews_cron").Collection("blogs")
 	collectionUsers = db.ConnectClient().Database("chatnews_cron").Collection("users")
 	collectionPosts = db.ConnectClient().Database("chatnews_cron").Collection("posts")

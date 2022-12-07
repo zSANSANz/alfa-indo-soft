@@ -47,49 +47,25 @@ func GetAllArticles(ctx *gin.Context) {
 	}
 }
 
-func GetArticleByName(ctx *gin.Context) {
-	id := ctx.Param("id")
+func GetArticleByTitleAndBody(ctx *gin.Context) {
+	title := ctx.Param("title")
 
 	filter := bson.A{
 		bson.M{
 			"$match": bson.M{
-				"slug": bson.M{"$regex": id},
-			},
-		},
-		bson.M{
-			"$lookup": bson.M{
-				"from":         "author",
-				"localField":   "author",
-				"foreignField": "author_id",
-				"as":           "authors",
-			},
-		},
-		bson.M{
-			"$lookup": bson.M{
-				"from":         "categories",
-				"localField":   "categories",
-				"foreignField": "term_id",
-				"as":           "category",
-			},
-		},
-		bson.M{
-			"$lookup": bson.M{
-				"from":         "tags",
-				"localField":   "tags",
-				"foreignField": "term_id",
-				"as":           "tag",
+				"title": bson.M{"$regex": title},
 			},
 		},
 	}
 
-	var results []models.Post
-	cur, err := collectionPosts.Aggregate(context.TODO(), filter)
+	var results []models.Article
+	cur, err := collectionArticles.Aggregate(context.TODO(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for cur.Next(context.TODO()) {
-		var elem models.Post
+		var elem models.Article
 		err := cur.Decode(&elem)
 		if err != nil {
 			log.Fatal(err)
